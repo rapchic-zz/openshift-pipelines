@@ -14,7 +14,7 @@ OpenShift Pipelines features:
 -	Designed for microservices and decentralized teams
 -	Integrated with the OpenShift Developer Console
 
-This tutorial walks you through pipeline concepts and how to create and run a simple pipeline for building and deploying a containerized app on OpenShift, and in this tutorial, we will use Triggers to handle a real GitHub webhook request to kickoff a PipelineRun.
+This tutorial walks you through pipeline concepts and how to create and run a simple pipeline for building and deploying a containerized app on OpenShift, and in this tutorial, we will use Triggers to handle a real GitHub webhook request to kickoff a PipelineRun. We're using this repo: https://github.com/openshift/pipelines-vote-ui/
 
 ## In this lab you will:
 
@@ -27,8 +27,8 @@ This tutorial walks you through pipeline concepts and how to create and run a si
 
 ## Prerequisites
 You will need the following to complete the exercises in this lab:
--	Access an OpenShift 4 cluster.
--	You will also use the Tekton CLI (tkn).
+-	Access to an OpenShift 4 cluster.
+-	You will also use the Tekton [CLI](https://github.com/tektoncd/cli#installing-tkn) (tkn)
  
 ## Setting up 
 Note: The sample output shown in the lab guide may be slightly different than what you see in the output when you issue the commands for your cluster.
