@@ -427,3 +427,89 @@ In the cloudshell check the list of pipelines you have created using the CLI:
 
 --- End of Exercise 6 ---
 
+
+
+Exercise 7
+Trigger a Pipeline
+
+Lets start a pipeline to build and deploy the backend application using tkn:
+
+    tkn pipeline start build-and-deploy \
+         -w name=shared-workspace,claimName=source-pvc \
+         -p deployment-name=vote-api \
+         -p git-url=https://github.com/IBMDeveloperUK/BSOK-vote-api.git \
+         -p IMAGE=image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/vote-api
+
+You should see output like the example below:
+
+    $ tkn pipeline start build-and-deploy \
+    >     -w name=shared-workspace,claimName=source-pvc \
+    >     -p deployment-name=vote-api \
+    >     -p git-url=https://github.com/IBMDeveloperUK/BSOK-vote-api.git \
+    >     -p IMAGE=image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/vote-api
+    Pipelinerun started: build-and-deploy-run-gxv7x
+
+In order to track the pipelinerun progress run:
+
+    tkn pipelinerun logs build-and-deploy-run-gxv7x -f -n pipelines-tutorial
+Note:  'gxv7x' will vary, please run the given output in the terminal
+
+Similarly, start a pipeline to build and deploy the frontend application:
+
+    tkn pipeline start build-and-deploy \
+        -w name=shared-workspace,claimName=source-pvc \
+        -p deployment-name=vote-ui \
+        -p git-url=http://github.com/IBMDeveloperUK/BSOK-vote-ui.git \
+        -p IMAGE=image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/vote-ui
+
+---
+
+    tkn pipeline start build-and-deploy \
+        -w name=shared-workspace,claimName=source-pvc \
+        -p deployment-name=vote-ui \
+        -p git-url=http://github.com/IBMDeveloperUK/BSOK-vote-ui.git \
+        -p IMAGE=image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/vote-ui
+
+As soon as you start the build-and-deploy pipeline, a pipelinerun will be instantiated and pods will be created to execute the tasks that are defined in the pipeline. See the list of pipelines by running the command below.
+
+    tkn pipeline ls
+
+You should see output like the example below:
+
+    $ tkn pipeline ls
+    NAME               AGE             LAST RUN                     STARTED          DURATION   STATUS
+    build-and-deploy   6 minutes ago   build-and-deploy-run-xy7rw   36 seconds ago   ---        Running
+  
+  Above, we have started build-and-deploy pipelines, with relevant pipeline parameters to deploy backend/frontend applications using single pipeline
+
+    tkn pipelinerun list
+
+You should see output like the example below:
+
+    $ tkn pipelinerun list
+    NAME                         STARTED         DURATION     STATUS
+    build-and-deploy-run-xy7rw   36 seconds ago   ---          Running
+    build-and-deploy-run-z2rz8   40 seconds ago   ---          Running
+
+Check out the logs of the pipelinerun as it runs using the tkn pipeline logs command which interactively allows you to pick the pipelinerun of your interest and inspect the logs:
+$ `tkn pipeline logs -f`
+? Select pipelinerun:  [Use arrows to move, type to filter]
+> build-and-deploy-run-xy7rw started 36 seconds ago
+  build-and-deploy-run-z2rz8 started 40 seconds ago
+
+After a few minutes, the pipeline should finish successfully.
+
+    $ tkn pipelinerun list
+    
+    NAME                         STARTED      DURATION     STATUS
+    build-and-deploy-run-xy7rw   1 hour ago   2 minutes    Succeeded
+    build-and-deploy-run-z2rz8   1 hour ago   19 minutes   Succeeded
+
+Looking back at the project, you should see that the images are successfully built and deployed.
+
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/6327371/146127784-23189e29-bb7c-4fc2-8bdb-15937c405894.png">
+
+The sample application should look like the image below.
+
+<img width="900" alt="image" src="https://user-images.githubusercontent.com/6327371/146127910-4058fb9e-0eee-42b2-91f8-9f2b53442a87.png">
+
