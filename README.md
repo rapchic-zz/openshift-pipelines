@@ -69,8 +69,12 @@ NAME           STATUS   ROLES           AGE   VERSION
 ```
 
 2.	Execute the command below to view services, deployments, and pods:
-oc get svc,deploy,po --all-namespaces
+
+``` oc get svc,deploy,po --all-namespaces ```
+
 Sample Output:
+
+```
 NAME           STATUS   ROLES           AGE   VERSION
 10.171.76.77   Ready    master,worker   37h   v1.16.2
 container-lab$ oc get svc,deploy,po --all-namespaces
@@ -80,16 +84,19 @@ default                                                 service/kubernetes      
 default                                                 service/openshift                                     ExternalName   <none>           kubernetes.default.svc.cluster.local   <none>                       37h
 default                                                 service/openshift-apiserver                           ClusterIP      172.21.146.181   <none>
 ...
+```
 
 Note: Some commands have large amounts of data in their output. You can scroll up and down in the terminal window and clear it using the clear command.
  
 3.	Execute the command below to clear the terminal screen:
  
-clear
+``` clear ```
  
 4.	Execute the command below to view all OpenShift projects:
-oc get projects
+``` oc get projects ```
+
 Sample Output:
+```
 NAME                                                    DISPLAY NAME             STATUS
 calico-system                                                                    Active
 default                                                                          Active
@@ -103,5 +110,5 @@ openshift                                                                       
 openshift-apiserver                                                              Active
 openshift-apiserver-operator                                                     Active
 ...
-
+```
 ---End Setting up ---
