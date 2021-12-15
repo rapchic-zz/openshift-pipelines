@@ -208,6 +208,7 @@ If you deploy the application directly, you should be able to see the deployment
 Make sure you are on the pipelines-tutorial project by selecting it from the Project dropdown menu. Either search for pipelines-tutorial in the search bar or scroll down until you find pipelines-tutorial and click on the name of your project.
 
 
+<img width="400" alt="image" src="https://user-images.githubusercontent.com/6327371/146125166-c1a53212-03a2-4e8d-a3be-2ef3a0fbd905.png">
 
 
 
