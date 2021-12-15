@@ -210,5 +210,169 @@ Make sure you are on the pipelines-tutorial project by selecting it from the Pro
 
 <img width="800" alt="image" src="https://user-images.githubusercontent.com/6327371/146125166-c1a53212-03a2-4e8d-a3be-2ef3a0fbd905.png">
 
+-- End of Exercise 3 --
 
+Exercise 4
+Create Pipeline Tasks
+
+Here is an example of a Maven task for building a Maven-based Java application:
+
+    apiVersion: tekton.dev/v1beta1
+    kind: Task
+    metadata:
+      name: maven-build
+    spec:
+      resources:
+        inputs:
+        - name: workspace-git
+          targetPath: /
+          type: git
+      steps:
+      - name: build
+        image: maven:3.6.0-jdk-8-slim
+        command:
+        - /usr/bin/mvn
+        args:
+        - install
+You can find more examples of reusable tasks in the Tekton Catalog and [OpenShift Catalog](https://github.com/openshift/pipelines-catalog) repositories.
+
+Install the *apply-manifests* and *update-deployment tasks* from the repository using oc or kubectl, which you will need for creating a pipeline in the next section:
+
+    oc create -f https://raw.githubusercontent.com/openshift/pipelines-tutorial/master/01_pipeline/01_apply_manifest_task.yaml
+
+    oc create -f https://raw.githubusercontent.com/openshift/pipelines-tutorial/master/01_pipeline/02_update_deployment_task.yaml
+
+You can take a look at the tasks you created using the Tekton CLI:
+
+    tkn task ls
+
+resulting in output similar to:
+
+    $ tkn task ls
+    NAME                AGE
+    apply-manifests     10 seconds ago
+    update-deployment   4 seconds ago
+
+We will be using *buildah clusterTasks*, which gets installed along with the Pipeline Operator. The Operator installs a few ClusterTask which you can see.
+
+    tkn clustertasks ls
+
+resulting in output similar to:
+
+    $ tkn clustertasks ls
+    NAME                       DESCRIPTION   AGE
+    buildah                                  1 day ago
+    buildah-v0-14-3                          1 day ago
+    git-clone                                1 day ago
+    s2i-php                                  1 day ago
+    tkn                                      1 day ago
+
+---End of Exercise 4 ---
+
+## Exercise 5
+
+### Prepare the Pipeline
+
+In the next step, we will define a Pipeline, which will be used to build an application image from an arbitrary GitHub repository and deploy the image as a running instance.
+
+It'll look like this:
+
+    apiVersion: tekton.dev/v1beta1
+    kind: Pipeline
+    metadata:
+      name: build-and-deploy
+    spec:
+      workspaces:
+      - name: shared-workspace
+      params:
+      - name: deployment-name
+        type: string
+        description: name of the deployment to be patched
+      - name: git-url
+        type: string
+        description: url of the git repo for the code of deployment
+      - name: git-revision
+        type: string
+        description: revision to be used from repo of the code for deployment
+        default: "master"
+      - name: IMAGE
+        type: string
+        description: image to be build from the code
+      tasks:
+      - name: fetch-repository
+        taskRef:
+          name: git-clone
+          kind: ClusterTask
+        workspaces:
+        - name: output
+          workspace: shared-workspace
+        params:
+        - name: url
+          value: $(params.git-url)
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+        - name: revision
+          value: $(params.git-revision)
+      - name: build-image
+        taskRef:
+          name: buildah
+          kind: ClusterTask
+        params:
+        - name: TLSVERIFY
+          value: "false"
+        - name: IMAGE
+          value: $(params.IMAGE)
+        workspaces:
+        - name: source
+          workspace: shared-workspace
+        runAfter:
+        - fetch-repository
+      - name: apply-manifests
+        taskRef:
+          name: apply-manifests
+        workspaces:
+        - name: source
+          workspace: shared-workspace
+        runAfter:
+        - build-image
+      - name: update-deployment
+        taskRef:
+          name: update-deployment
+        workspaces:
+        - name: source
+          workspace: shared-workspace
+        params:
+        - name: deployment
+          value: $(params.deployment-name)
+        - name: IMAGE
+          value: $(params.IMAGE)
+        runAfter:
+        - apply-manifests
+
+
+You need to create the PersistentVolumeClaim which can be used for Pipeline execution:
+
+    oc create -f https://raw.githubusercontent.com/openshift/pipelines-tutorial/master/01_pipeline/03_persistent_volume_claim.yaml
+
+Run the following command to check when the volume is available:
+
+    oc get pvc
+
+The resulting status should change from:
+
+    $ oc get pvc
+    NAME         STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS      AGE
+    source-pvc   Pending 
+
+to
+
+        $ oc get pvc
+        NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS      AGE
+        source-pvc   Bound    
+    
+    pvc-5a9e5699-fdfb-468c-b0bf-c85b37c39bd0   20Gi       RWO            ibmc-block-gold   83s
+
+--- End of Exercise 5 ---
 
