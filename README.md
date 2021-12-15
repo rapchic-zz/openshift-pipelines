@@ -377,3 +377,53 @@ to
 
 --- End of Exercise 5 ---
 
+## Exercise 6
+### Assemble a Pipeline
+
+In this section, you will create a pipeline that takes the source code of the application from GitHub and then builds and deploys it on OpenShift.
+ 
+This pipeline helps you to build and deploy backend/frontend, by configuring right resources to pipeline.
+
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/6327371/146126631-d5753d7e-b4c3-48d5-b817-8275d4362470.png">
+
+ 
+Once you deploy the pipelines, you should be able to visualize pipeline flow in the OpenShift Web Console by switching over to the Developer perspective of the OpenShift Web Console. select pipeline tab, select project as pipelines-tutorial and click on pipeline build-and-deploy
+
+
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/6327371/146126670-6cad2d4c-7cfa-49e0-955d-caabbdd287c5.png">
+
+This pipeline helps you to build and deploy backend/frontend, by configuring right resources to pipeline.
+
+Pipeline Steps:
+1.	Clones the source code of the application from a git repository by referring (git-url and git-revision param)
+2.	Builds the container image of application using the buildah clustertask that uses Buildah to build the image
+3.	The application image is pushed to an image registry by refering (image param)
+4.	The new application image is deployed on OpenShift using the apply-manifests and update-deployment tasks.
+
+Create the pipeline by running the following:
+
+    oc create -f https://raw.githubusercontent.com/openshift/pipelines-tutorial/master/01_pipeline/04_pipeline.yaml
+    
+    
+Alternatively, in the OpenShift Web Console, you can click on the + at the top right of the screen while you are in the pipelines-tutorial project:
+
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/6327371/146127083-3ddc2e4b-c180-468f-83e5-48acc48c5294.png">
+
+ 
+Upon creating the pipeline via the web console, you will be taken to a Pipeline Details page that gives an overview of the pipeline you created.
+ 
+Select the Parameters tab to enter a Parameter to the build-and-deploy pipeline.
+ 
+Add the TLSVERIFY parameter and set it to ‘false’. Be sure to click ‘Save’ and then ‘Reload’.
+ 
+In the cloudshell check the list of pipelines you have created using the CLI:
+
+    tkn pipeline ls
+
+    $ tkn pipeline ls
+    
+    NAME               AGE            LAST RUN   STARTED   DURATION   STATUS
+    build-and-deploy   1 minute ago   ---        ---       ---        ---
+
+--- End of Exercise 6 ---
+
