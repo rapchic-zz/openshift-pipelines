@@ -146,7 +146,7 @@ In the following sections, you will go through each of the above steps to define
 
 ## Exercise 2
 
-###Install OpenShift Pipelines
+### Install OpenShift Pipelines
 
 Install OpenShift Pipelines
 OpenShift Pipelines is provided as an add-on on top of OpenShift that can be installed via an operator available in the OpenShift OperatorHub.
@@ -212,8 +212,9 @@ Make sure you are on the pipelines-tutorial project by selecting it from the Pro
 
 -- End of Exercise 3 --
 
-Exercise 4
-Create Pipeline Tasks
+## Exercise 4
+
+### Create Pipeline Tasks
 
 Here is an example of a Maven task for building a Maven-based Java application:
 
