@@ -133,8 +133,8 @@ The Tekton API enables functionality to be separated from configuration (e.g. Pi
 Triggers extends the Tekton architecture with the following CRDs:
 -	**TriggerTemplate** - Templates resources to be created (e.g. Create PipelineResources and PipelineRun that uses them)
 -	**TriggerBinding** - Validates events and extracts payload fields
--	**EventListener - Connects TriggerBindings and TriggerTemplates into an addressable endpoint (the event sink). It uses the extracted event parameters from each TriggerBinding (and any supplied static parameters) to create the resources specified in the corresponding TriggerTemplate. It also optionally allows an external service to pre-process the event payload via the interceptor field.
--	**ClusterTriggerBinding - A cluster-scoped TriggerBinding
+-	**EventListener** - Connects TriggerBindings and TriggerTemplates into an addressable endpoint (the event sink). It uses the extracted event parameters from each TriggerBinding (and any supplied static parameters) to create the resources specified in the corresponding TriggerTemplate. It also optionally allows an external service to pre-process the event payload via the interceptor field.
+-	**ClusterTriggerBinding** - A cluster-scoped TriggerBinding
 Using tektoncd/triggers in conjunction with tektoncd/pipeline enables you to easily create full-fledged CI/CD systems where the execution is defined entirely through Kubernetes resources.
 
 Using *tektoncd/triggers* in conjunction with tektoncd/pipeline enables you to easily create full-fledged CI/CD systems where the execution is defined entirely through Kubernetes resources.
@@ -143,5 +143,71 @@ You can learn more about triggers by checking out the [docs](https://github.com/
 In the following sections, you will go through each of the above steps to define and invoke a pipeline.
 
 --End of Exercise 1--
+
+## Exercise 2
+
+###Install OpenShift Pipelines
+
+Install OpenShift Pipelines
+OpenShift Pipelines is provided as an add-on on top of OpenShift that can be installed via an operator available in the OpenShift OperatorHub.
+
+<img width="309" alt="image" src="https://user-images.githubusercontent.com/6327371/146124651-6698c972-9c5c-4aa1-96f3-55ed34d2848d.png">
+
+To start, make sure you are on the Administrator perspective as shown below:
+
+<img width="151" alt="image" src="https://user-images.githubusercontent.com/6327371/146124670-5ab79855-cad4-45a0-a6b7-8e6dcafb1986.png">
+
+Go to *Operators > OperatorHub* in the Web Console. You can see the list of available operators for OpenShift provided by Red Hat as well as a community of partners and open-source projects.
+
+<img width="278" alt="image" src="https://user-images.githubusercontent.com/6327371/146124715-95b6cdf4-a378-49a8-a16e-cee1911bfb69.png">
+
+In the search bar where it says Filter by keyword..., type *OpenShift Pipelines* to find the OpenShift Pipelines Operator:
+
+<img width="295" alt="image" src="https://user-images.githubusercontent.com/6327371/146124772-1962f5cb-eaf4-42d2-95c2-7cb2ed8ed908.png">
+
+Click on *OpenShift Pipelines Operator*, Continue, and then Install:
+
+<img width="246" alt="image" src="https://user-images.githubusercontent.com/6327371/146124816-ee4a9fc4-b8e4-417e-b61d-38970e7568bb.png">
+
+Leave the default settings and click on *Install* in order to install the Operator:
+
+<img width="265" alt="image" src="https://user-images.githubusercontent.com/6327371/146124851-272e1f46-5b2b-4af0-b55f-de2503720ae0.png">
+
+After clicking Install, you will be taken to the Installed Operators page. If you do not see the OpenShift Pipelines Operator as shown below, simply wait a moment while the OpenShift Pipelines Operator finishes installation:
+
+<img width="363" alt="image" src="https://user-images.githubusercontent.com/6327371/146124904-e0b0801a-d53d-46da-98a7-d44161d8dac1.png">
+
+That's all. The operator now installs OpenShift Pipelines on the cluster.
+You can confirm the following by checking tekton-pipelines and tekton-triggers pods with Running state in openshift-pipelines namespace. If so, openshift-pielines have been installed on your cluster.
+
+<img width="289" alt="image" src="https://user-images.githubusercontent.com/6327371/146124926-f77e1f2a-6090-4efe-bfce-e78e7214dbcb.png">
+
+-- End of Exercise 2 --
+
+## Exercise 3
+
+### Create a project
+
+From the terminal/shell 
+
+Create a project for the sample application that you will be using in this tutorial:
+
+    oc new-project pipelines-tutorial
+
+OpenShift Pipelines automatically adds and configures a ServiceAccount named pipeline that has sufficient permissions to build and push an image. This service account will be used later in the tutorial.
+
+Run the following command to see the pipeline service account:
+
+    oc get serviceaccount pipeline
+
+You will use the simple application during this tutorial, which has a frontend and backend
+You can also deploy the same applications by applying the artifacts available in k8s directory of the respective repo.
+
+If you deploy the application directly, you should be able to see the deployment in the OpenShift Web Console by switching over to the Developer perspective of the OpenShift Web Console. Change from Administrator to Developer from the drop down as shown below:
+ 
+Make sure you are on the pipelines-tutorial project by selecting it from the Project dropdown menu. Either search for pipelines-tutorial in the search bar or scroll down until you find pipelines-tutorial and click on the name of your project.
+
+
+
 
 
