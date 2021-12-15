@@ -112,3 +112,36 @@ openshift-apiserver-operator                                                    
 ...
 ```
 ---End Setting up ---
+
+
+## Exercise 1
+Learn about Tekton concepts
+
+Tekton defines a number of Kubernetes custom resources as building blocks in order to standardize pipeline concepts and provide a terminology that is consistent across CI/CD solutions. These custom resources are an extension of the Kubernetes API that let users create and interact with these objects using kubectl and other Kubernetes tools.
+
+The custom resources needed to define a pipeline are listed below:
+-	Task: a reusable, loosely coupled number of steps that perform a specific task (e.g. building a container image)
+-	Pipeline: the definition of the pipeline and the Tasks that it should perform
+-	TaskRun: the execution and result of running an instance of task
+-	PipelineRun: the execution and result of running an instance of pipeline, which includes a number of TaskRuns
+
+<img width="325" alt="image" src="https://user-images.githubusercontent.com/6327371/146123336-cd4b7f6a-7ad2-4f00-b61c-559a16d2d2c2.png">
+
+For further details on pipeline concepts, refer to the Tekton documentation that provides an excellent guide for understanding various parameters and attributes available for defining pipelines.
+
+The Tekton API enables functionality to be separated from configuration (e.g. Pipelines vs PipelineRuns) such that steps can be reusable.
+Triggers extends the Tekton architecture with the following CRDs:
+-	**TriggerTemplate** - Templates resources to be created (e.g. Create PipelineResources and PipelineRun that uses them)
+-	**TriggerBinding** - Validates events and extracts payload fields
+-	**EventListener - Connects TriggerBindings and TriggerTemplates into an addressable endpoint (the event sink). It uses the extracted event parameters from each TriggerBinding (and any supplied static parameters) to create the resources specified in the corresponding TriggerTemplate. It also optionally allows an external service to pre-process the event payload via the interceptor field.
+-	**ClusterTriggerBinding - A cluster-scoped TriggerBinding
+Using tektoncd/triggers in conjunction with tektoncd/pipeline enables you to easily create full-fledged CI/CD systems where the execution is defined entirely through Kubernetes resources.
+
+Using *tektoncd/triggers* in conjunction with tektoncd/pipeline enables you to easily create full-fledged CI/CD systems where the execution is defined entirely through Kubernetes resources.
+You can learn more about triggers by checking out the [docs](https://github.com/tektoncd/triggers/blob/master/docs/README.md).
+
+In the following sections, you will go through each of the above steps to define and invoke a pipeline.
+
+--End of Exercise 1--
+
+
