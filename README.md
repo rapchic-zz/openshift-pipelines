@@ -59,11 +59,14 @@ Sample command:
 
 ### Testing your environment
 1.	Validate access to your cluster by viewing the nodes in the cluster:
-oc get node
+
+``` oc get node ```
 
 Sample Output:
+```
 NAME           STATUS   ROLES           AGE   VERSION
-10.171.76.77	 Ready    master,worker   37h   v1.16.2
+10.171.76.77	 Ready    master,worker   37h   v1.16.2 
+```
 
 2.	Execute the command below to view services, deployments, and pods:
 oc get svc,deploy,po --all-namespaces
